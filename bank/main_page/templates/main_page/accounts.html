@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+    <meta charset="utf-8">
+    <title>Accounts</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/sidebars/">
+    <!-- Bootstrap core CSS -->
+<link href="/docs/5.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <link href="sidebars.css" rel="stylesheet"><!-- Custom styles for this template -->
+</head>
+<body>
+    <main>
+      <h1 class="visually-hidden">Sidebars examples</h1>
+
+      <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+          <svg class="bi me-2" width="40" height="50"><use xlink:href="#bootstrap"></use></svg>
+          <span class="fs-4">Profile</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+          <li>
+            <a href="{% url 'profile'%}" class="nav-link text-white">
+              <svg class="bi me-2" width="16" height="16"><use xlink:href="{% url 'profile'%}"></use></svg>
+              Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'my_accounts'%}" class="nav-link active" aria-current="page">
+              <svg class="bi me-2" width="16" height="20"><use xlink:href="{% url 'my_accounts'%}"></use></svg>
+              My accounts
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'my_installments'%}" class="nav-link text-white">
+              <svg class="bi me-2" width="16" height="16"><use xlink:href="{% url 'my_installments'%}"></use></svg>
+              My installments
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'my_credits'%}" class="nav-link text-white">
+              <svg class="bi me-2" width="16" height="20"><use xlink:href="{% url 'my_credits'%}"></use></svg>
+              My credits
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'sign_in'%}" class="nav-link text-white">
+              <svg class="bi me-2" width="16" height="16"><use xlink:href="{% url 'sign_in'%}"></use></svg>
+              Sign out
+            </a>
+          </li>
+        </ul>
+        <hr>
+        <div class="dropdown">
+          <a href="#" class="d-flex align-items-center text-white text-decoration-none">
+            <p>{{ user.name }}<p>
+          </a>
+        </div>
+      </div>
+    <div class="container-fluid">
+        <form method="post">
+            {% csrf_token %}
+            {% for acc in accounts %}
+                <div class="col" width="40">
+                    <div class="w-50 btn btn-lg btn-primary">
+                        {{ acc.number }}  {{ acc.bank }} {{ acc.money }}
+                    </div>
+                </div>
+            {% endfor %}
+            <p><br>{{ form.number }}<br></p>
+            <button class="w-20 btn btn-lg btn-primary" type="submit">Choose</button>
+        </form>
+    </div>
+    <br><a href="{% url 'new_account'%}" class="w-10 btn btn-lg btn-primary">Add accounts</a>
+    </main>
+</body>
+</html>
