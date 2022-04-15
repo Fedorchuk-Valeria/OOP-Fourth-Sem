@@ -10,7 +10,6 @@ class Enterprise(models.Model):
     payer_account_number = models.CharField(max_length=10, null=True)
     bank_id = models.CharField(max_length=10, null=True)
     address = models.CharField(max_length=40, null=True)
-    workers = None
 
     def __str__(self):
         return self.juridical_name
@@ -41,8 +40,9 @@ class User(models.Model):
 
 
 class Bank(Enterprise):
-    def re(self):
-        l=1
+    def __str__(self):
+        return self.juridical_name
+
 
 
 class Account(models.Model):
@@ -131,6 +131,12 @@ class Installment(models.Model):
     count_of_month = models.IntegerField(null=True)
     current = models.BooleanField(default=False)
     approved = models.BooleanField(default=False)
+
+    def create(self, user, bank, money, month):
+        self.user = user
+        self.bank = bank
+        self.count_of_month = month
+        self.count_of_money = money
 
 
 class Credit(Installment):

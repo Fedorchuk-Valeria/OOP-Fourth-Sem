@@ -18,6 +18,9 @@ urlpatterns = [
          name='transfer_money'),
     path('account/freeze', AccountsController.as_view({'get': 'get_freeze'}), name='freeze_acc'),
     path('del', AccountsController.as_view({'get': 'get_bloke'}), name='bloke_acc'),
-    path('installments', InstallmentsController.as_view(), name='my_installments'),
+    path('installments', InstallmentsController.as_view({'get': 'get'}), name='my_installments'),
     path('credits', CreditsController.as_view(), name='my_credits'),
+    path('add/installments', InstallmentsController.as_view({'get': 'get_create_installment',
+                                                             'post': 'post_create_installment'}),
+         name='new_installment'),
 ]

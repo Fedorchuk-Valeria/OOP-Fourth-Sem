@@ -42,13 +42,13 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'reg_requests'%}" class="nav-link active" aria-current="page">
+            <a href="{% url 'reg_requests'%}" class="nav-link text-white">
               <svg class="bi me-2" width="16" height="16"><use xlink:href="{% url 'reg_requests'%}"></use></svg>
               Registration requests
             </a>
           </li>
           <li>
-            <a href="{% url 'installments_requests'%}" class="nav-link text-white">
+            <a href="{% url 'installments_requests'%}" class="nav-link active" aria-current="page">
               <svg class="bi me-2" width="16" height="16"><use xlink:href="{% url 'installments_requests'%}"></use></svg>
               Installment requests
             </a>
@@ -70,14 +70,14 @@
     <div class="container-fluid">
         <form method="post">
             {% csrf_token %}
-            {% for acc in accounts %}
+            {% for i in installments %}
                 <div class="col" width="40">
                     <div class="w-50 btn btn-lg btn-primary">
-                        {{ acc.number }}  {{ acc.bank }} {{ acc.user }} {{ acc.date_of_creation }}
+                        {{ i.user }}  {{ i.count_of_money }} {{ i.count_of_month }}
                     </div>
                 </div>
             {% endfor %}
-            <p><br>{{ form.number }}<br></p>
+            <p><br>{{ form.choose }}<br></p>
             <button class="w-20 btn btn-lg btn-primary" type="submit">Choose</button>
         </form>
     </div>

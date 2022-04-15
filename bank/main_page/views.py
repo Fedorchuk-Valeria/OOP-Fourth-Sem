@@ -1,43 +1,10 @@
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from .models import User, Bank, Account, Transfer, Credit, Installment
-from .forms import BankForm, AccountForm, MoneyForm
+from .forms import BankForm, AccountForm, MoneyForm, InstallmentForm
 from first_page.forms import UserForm
 from django.views import View
 from office.models import Manager, Operator
-
-
-# class ProfileController(View):
-#
-#     profile_template = 'main_page/profile.html'
-#     start_template = 'first_page/log_in.html'
-#     model = User
-#
-#     def get(self, request):
-#         current_user = User
-#         try:
-#             current_user = self.model.objects.get(online=True)
-#         except current_user.DoesNotExist:
-#             current_user = None
-#         if current_user:
-#             d = {'user': current_user}
-#             return render(request, self.profile_template, d)
-#         email = request.POST.get('email')
-#         password = request.POST.get('password')
-#         try:
-#             user = User.objects.get(email=email, password=password)
-#             d = {'user': user}
-#             user.online = True
-#             user.save()
-#             return render(request, self.profile_template, d)
-#         except user.DoesNotExist:
-#             error_message = 'User not found'
-#             form = UserForm()
-#             f_d = {
-#                 'form': form,
-#                 'error': error_message
-#             }
-#             return render(request, self.start_template, f_d)
 
 
 class AccountsController(viewsets.ViewSet):
@@ -216,7 +183,7 @@ class AccountsController(viewsets.ViewSet):
         return redirect('my_accounts')
 
 
-class InstallmentsController(View):
+class InstallmentsController(viewsets.ViewSet):
 
     def get(self, request):
         current_inst = Installment()
@@ -243,6 +210,33 @@ class InstallmentsController(View):
              'installments': installments
              }
         return render(request, 'main_page/installments.html', d)
+
+    def get_create_installment(self, request):
+        form = InstallmentForm()
+        return render(request, 'main_page/new_installment.html', {'form': form})
+
+    def post_create_installment(self, request):
+        i = request.POST.get('bank')
+        bank = Bank.objects.get(id=i)
+        i = int(request.POST.get('count_of_month'))
+        month = InstallmentForm.Meta.CHOISE_MONTH[i - 1][1]
+        money = request.POST.get('count_of_money')
+        user = User()
+        try:
+            user = User.objects.get(online=True)
+        except user.DoesNotExist:
+            user = None
+        installment = Installment()
+        installment.create(user, bank, money, month)
+        installment.save()
+        manager = Manager()
+        manager = Manager.objects.get(work_place=bank)
+        manager.get_new_request_on_installments(installment)
+        manager.save()
+        mess = 'Send for check'
+        form = InstallmentForm()
+        return render(request, 'main_page/new_installment.html', {'form': form, 'message': mess})
+
 
 class CreditsController(View):
 

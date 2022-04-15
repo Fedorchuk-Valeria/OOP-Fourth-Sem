@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from first_page.forms import UserForm
-from main_page.models import Account, Transfer
+from main_page.models import Account, Transfer, Installment
 from main_page.forms import AccountForm
 from .models import Manager, Operator
 from .forms import IndexForm
@@ -52,11 +52,76 @@ from .forms import IndexForm
 #     form = UserForm()
 #     return render(request, 'office/sign_in.html', {'form': form, 'error': mess})
 
+class RequestsInstallmentsController(View):
+    def get(self, request):
+        form = IndexForm()
+        m = Manager()
+        current_ins = Installment()
+        try:
+            current_ins = Account.objects.filter(current=True)
+            for c_a in current_ins:
+                c_a.current = False
+                c_a.save()
+        except current_ins.DoesNotExist:
+            current_acc = None
+        try:
+            m = Manager.objects.get(online=True)
+        except m.DoesNotExist:
+            m = None
+        if m.not_approved_installments:
+            installments = m.not_approved_installments.all()
+        else:
+            installments = []
+        d = {'form': form,
+             'manager': m,
+             'installments': installments
+             }
+        return render(request, 'office/installments.html', d)
+
+    def post(self, request):
+        m = Manager()
+        try:
+            m = Manager.objects.get(online=True)
+        except m.DoesNotExist:
+            m = None
+        if request.POST.get('choose'):
+            i = int(request.POST.get('choose')) - 1
+            imp = m.not_approved_installments.all()[i]
+            imp.current = True
+            imp.save()
+            return render(request, 'office/installment.html', {'imp': imp})
+        acc = ()
+        try:
+            imp = Installment.objects.get(current=True)
+        except imp.DoesNotExist:
+            imp = None
+        if request.POST.get('btn') == 'Approve':
+            m.approve_installment(imp)
+            m.save()
+        else:
+            m.refuse_installment(imp)
+            m.save()
+        installments = m.not_approved_installments.all()
+        form = IndexForm()
+        d = {'form': form,
+             'manager': m,
+             'installments': installments
+        }
+        return render(request, 'office/installments.html', d)
+
 
 class RequestsController(View):
     form = AccountForm()
 
     def get(self, request):
+        current_acc = Account()
+        try:
+            current_acc = Account.objects.filter(current=True)
+            for c_a in current_acc:
+                c_a.current = False
+                c_a.save()
+        except current_acc.DoesNotExist:
+            current_acc = None
         m = Manager()
         try:
             m = Manager.objects.get(online=True)
@@ -90,10 +155,10 @@ class RequestsController(View):
         except acc.DoesNotExist:
             acc = None
         if request.POST.get('btn') == 'Approve':
-            m.approve(acc)
+            m.approve_account(acc)
             m.save()
         else:
-            m.refuse(acc)
+            m.refuse_account(acc)
             m.save()
         accounts = m.not_approved_accounts.all()
         d = {'form': self.form,

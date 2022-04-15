@@ -1,5 +1,5 @@
 from django.db import models
-from main_page.models import User, Account, Transfer
+from main_page.models import User, Account, Transfer, Installment
 
 
 class EnterpriseSpecialist(User):
@@ -31,17 +31,29 @@ class Operator(User):
 
 class Manager(Operator):
     not_approved_accounts = models.ManyToManyField(Account)
+    not_approved_installments = models.ManyToManyField(Installment)
 
     def get_new_request_on_registration(self, new_accounts):
         self.not_approved_accounts.add(new_accounts)
 
-    def approve(self, acc):
+    def approve_account(self, acc):
         acc.approved = True
         acc.save()
         self.not_approved_accounts.remove(acc)
 
-    def refuse(self, acc):
+    def refuse_account(self, acc):
         acc.delete()
         self.not_approved_accounts.remove(acc)
 
+    def get_new_request_on_installments(self, new_installment):
+        self.not_approved_installments.add(new_installment)
+
+    def approve_installment(self, installment):
+        installment.approved = True
+        installment.save()
+        self.not_approved_installments.remove(installment)
+
+    def refuse_installment(self, installment):
+        installment.delete()
+        self.not_approved_installments.remove(installment)
 

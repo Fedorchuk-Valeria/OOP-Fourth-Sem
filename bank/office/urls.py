@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import RequestsController, OperationsController
+from .views import RequestsController, OperationsController, RequestsInstallmentsController
 from first_page.views import ProfileController, SignInController
 from .models import Manager, Operator
 
@@ -19,5 +19,6 @@ urlpatterns = [
     path('home/operator', ProfileController.as_view(profile_template='office/profile_operator.html',
                                                     start_template='office/sign_in_operator.html',
                                                     model=Operator), name='profile_operator'),
-    path('operator/transfer/operations', OperationsController.as_view(), name='transfer_operations')
+    path('operator/transfer/operations', OperationsController.as_view(), name='transfer_operations'),
+    path('manager/installments/requests', RequestsInstallmentsController.as_view(), name='installments_requests')
 ]

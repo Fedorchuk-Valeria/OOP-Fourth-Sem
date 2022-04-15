@@ -54,12 +54,6 @@
             </a>
           </li>
           <li>
-            <a href="{% url 'my_credits'%}" class="nav-link text-white">
-              <svg class="bi me-2" width="16" height="16"><use xlink:href="{% url 'my_credits'%}"></use></svg>
-              My credits
-            </a>
-          </li>
-          <li>
             <a href="{% url 'sign_in'%}" class="nav-link text-white">
               <svg class="bi me-2" width="16" height="16"><use xlink:href="{% url 'sign_in'%}"></use></svg>
               Sign out
@@ -79,15 +73,13 @@
             {% for inst in installments %}
                 <div class="col" width="40">
                     <div class="w-50 btn btn-lg btn-primary">
-                         {{ inst.bank }} {{ inst.money }} {{ inst.count_of_money }}
+                         {{ inst.bank }} {{ inst.count_of_month }} {{ inst.count_of_money }}
                     </div>
                 </div>
             {% endfor %}
-            <p><br>{{ form.number }}<br></p>
-            <button class="w-20 btn btn-lg btn-primary" type="submit">Choose</button>
         </form>
     </div>
-    <br><a href="{% url 'new_account'%}" class="w-10 btn btn-lg btn-primary">Add installments</a>
+    <br><a href="{% url 'new_installment'%}" class="w-10 btn btn-lg btn-primary">Add installments</a>
     </main>
 </body>
 </html>
