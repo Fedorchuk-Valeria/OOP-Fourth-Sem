@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
-from .models import User, Bank, Account, Transfer, Credit, Installment
+from .models import User, Bank, Account, Transfer, Installment
 from .forms import BankForm, AccountForm, MoneyForm, InstallmentForm
 from first_page.forms import UserForm
 from django.views import View

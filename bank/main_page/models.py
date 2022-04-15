@@ -44,7 +44,6 @@ class Bank(Enterprise):
         return self.juridical_name
 
 
-
 class Account(models.Model):
     frozen = models.BooleanField(default=False)
     money = models.IntegerField(null=True)
