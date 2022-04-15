@@ -139,6 +139,6 @@ class Installment(models.Model):
         self.count_of_money = money
 
 
-class Credit(Installment):
-    percent = models.IntegerField(null=True)
+# class Credit(Installment):
+#     percent = models.IntegerField(null=True)
 
